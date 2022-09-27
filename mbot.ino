@@ -9,7 +9,18 @@ MeMegaPiDCMotor motor2(PORT1B);
 MeMegaPiDCMotor motor3(PORT2A);
 MeMegaPiDCMotor motor4(PORT2B);
 
+// m4 m1
+// m3 m2
+
+float motor1Scale = 1;
+float motor2Scale = 0.8;
+float motor3Scale = 0.8;
+float motor4Scale = 0.8;
+
 uint8_t motorSpeed = 155;
+uint8_t motorSpeedLevel1 = 55;
+uint8_t motorSpeedLevel2 = 155;
+uint8_t motorSpeedLevel3 = 255;
 
 MeNewRGBLed rgbled_67(67,4);
 MeNewRGBLed rgbled_68(68,4);
@@ -17,6 +28,17 @@ MeNewRGBLed rgbled_68(68,4);
 float light_1 =236;
 float light_2 = 0;
 float light_3 =117;
+
+byte forward = 119;
+byte left = 97;
+byte backward = 115;
+byte right = 100;
+byte rotateLeft = 113;
+byte rotateRight = 101;
+byte n1 = 49;
+byte n2 = 50;
+byte n3 = 51;
+
 
 void setup() {
   Serial.begin(115200);
@@ -28,68 +50,43 @@ void setup() {
 }
 
 
-
 void loop() {
   // send data only when you receive data:
   if (Serial.available() > 0) {
     // read the incoming byte:
     incomingByte = Serial.read();
     Serial.println(incomingByte, DEC);
-
     
-    if ( incomingByte==119){
-      motor1.run(motorSpeed*1); /* value: between -255 and 255. */
-      motor2.run(motorSpeed*1); /* value: between -255 and 255. */
-      motor3.run(motorSpeed*-1);
-      motor4.run(motorSpeed*-1);
-      delay(10);
+    if (incomingByte == forward){
+      motorRun(1, 1, -1, -1);
     }
-    if ( incomingByte==115){
-      motor1.run(motorSpeed*-1); /* value: between -255 and 255. */
-      motor2.run(motorSpeed*-1); /* value: between -255 and 255. */
-      motor3.run(motorSpeed*1);
-      motor4.run(motorSpeed*1);
-      delay(10);
+    if (incomingByte == backward){
+      motorRun(-1, -1, 1, 1);
     }
-    if ( incomingByte==100){
-      motor1.run(motorSpeed*-1); /* value: between -255 and 255. */
-      motor2.run(motorSpeed*1); /* value: between -255 and 255. */
-      motor3.run(motorSpeed*1);
-      motor4.run(motorSpeed*-1);
-      delay(10);
+    if (incomingByte == right){
+      motorRun(-1, 1, 1, -1);
     }
-     if ( incomingByte==97){
-      motor1.run(motorSpeed*1); /* value: between -255 and 255. */
-      motor2.run(motorSpeed*-1); /* value: between -255 and 255. */
-      motor3.run(motorSpeed*-1);
-      motor4.run(motorSpeed*1);
-      delay(10);
+     if (incomingByte == left){
+      motorRun(1, -1, -1, 1);
     }
-    if ( incomingByte==101){
-      motor1.run(motorSpeed*-1); /* value: between -255 and 255. */
-      motor2.run(motorSpeed*-1); /* value: between -255 and 255. */
-      motor3.run(motorSpeed*-1);
-      motor4.run(motorSpeed*-1);
-      delay(10);
+    
+    if (incomingByte == rotateRight){
+      motorRun(-1, -1, -1, -1);
     }
-    if ( incomingByte==113){
-      motor1.run(motorSpeed*1); /* value: between -255 and 255. */
-      motor2.run(motorSpeed*1); /* value: between -255 and 255. */
-      motor3.run(motorSpeed*1);
-      motor4.run(motorSpeed*1);
-      delay(10);
+    if (incomingByte == rotateLeft){
+      motorRun(1, 1, 1, 1);
     }
 
-    if ( incomingByte==49){
-      motorSpeed=55;
+    if (incomingByte == n1){
+      motorSpeed = motorSpeedLevel1;
       delay(5);
     }
-    else if ( incomingByte==50){
-      motorSpeed=155;
+    else if (incomingByte == n2){
+      motorSpeed = motorSpeedLevel2;
       delay(5);
     }
-    else if ( incomingByte==51){
-      motorSpeed=255;
+    else if (incomingByte == n3){
+      motorSpeed = motorSpeedLevel3;
       delay(5);
     }
   
@@ -98,7 +95,14 @@ void loop() {
      motor3.stop();
      motor4.stop();   
       
-     prevByte=incomingByte;
-     
-    }
+     prevByte=incomingByte;   
   }
+}
+
+void motorRun(int motor1Dir, int motor2Dir, int motor3Dir, int motor4Dir) {
+  motor1.run(motorSpeed * motor1Dir * motor1Scale); /* value: between -255 and 255. */
+  motor2.run(motorSpeed * motor2Dir * motor2Scale); /* value: between -255 and 255. */
+  motor3.run(motorSpeed * motor3Dir * motor3Scale);
+  motor4.run(motorSpeed * motor4Dir * motor4Scale);
+  delay(10);
+}
