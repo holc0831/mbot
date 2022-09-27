@@ -1,0 +1,6 @@
+{
+    "username" : "",
+    "password" : "",
+    "mqtt_server_ip" : "mqtt.eclipseprojects.io",
+    "mqtt_topic": "RoverAction/rover1"
+}
