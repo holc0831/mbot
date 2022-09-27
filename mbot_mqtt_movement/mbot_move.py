@@ -81,14 +81,14 @@ def setSpeedLevel(speed):
 
     
 dispatch = {
-    'move_north': forward,
-    'move_south': backward,
-    'move_west': left,
-    'move_east': right,
-    'move_northeast': forwardRight,
-    'move_northwest': forwardLeft,
-    'move_southeast': backwardRight,
-    'move_southwest': backwardLeft,
+    'move_forward': forward,
+    'move_backward': backward,
+    'move_left': left,
+    'move_right': right,
+    'move_forwardright': forwardRight,
+    'move_forwardleft': forwardLeft,
+    'move_backwardright': backwardRight,
+    'move_backwardleft': backwardLeft,
     'rotate_right': rotateRight,
     'rotate_left': rotateLeft,
     'set_speed': setSpeedLevel
