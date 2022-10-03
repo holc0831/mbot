@@ -12,3 +12,8 @@ Copy unit file to systemd folder
 ```
 sudo cp mbot_start.service /etc/systemd/system
 ```
+
+Start unit file
+```
+sudo systemctl start mbot_start.service
+```
