@@ -1,0 +1,12 @@
+[Unit]
+Description=OmniRover Start
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=python3 mbot_start.py -c mbot_config.json
+
+
+[Install]
+WantedBy=multi-user.target
