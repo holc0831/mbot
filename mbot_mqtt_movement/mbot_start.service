@@ -5,7 +5,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-ExecStart=python3 mbot_start.py -c mbot_config.json
+WorkingDirectory=/home/pi/mbot/mbot_mqtt_movement/
+ExecStart=/home/pi/mbot/mbot_mqtt_movement/python3 mbot_start.py -c mbot_config.json
 
 
 [Install]
