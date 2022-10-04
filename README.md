@@ -17,3 +17,6 @@ Start unit file
 ```
 sudo systemctl start mbot_start.service
 ```
+
+Enable wait for network with systemd, follow the instruction in this article
+https://www.freedesktop.org/wiki/Software/systemd/NetworkTarget/
