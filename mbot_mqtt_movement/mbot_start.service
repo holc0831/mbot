@@ -6,6 +6,8 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=root
+Restart=on-failure
+RestartSec=5s
 WorkingDirectory=/home/pi/mbot/mbot_mqtt_movement/
 ExecStart=/home/pi/mbot/mbot_mqtt_movement/env/bin/python3 mbot_start.py -c mbot_config.json
 
