@@ -29,7 +29,9 @@ class MBotMovement():
             'rotate_right': self.rotateRight,
             'rotate_left': self.rotateLeft,
             'set_speed': self.setSpeedLevel,
-            'stop': self.stop
+            'stop': self.stop,
+            'color_init': self.color_init,
+            'color_change': self.color_change
         }    
 
     def write_read(self, x):
@@ -38,6 +40,13 @@ class MBotMovement():
         self.arduino.write(bytes('0', 'utf-8'))
         data = self.arduino.readline()
         return data
+
+
+    def color_init(self, time):
+        self.write_read("c")
+
+    def color_change(self, value):
+        self.write_read(value)
 
     def forward(self, time):
         timeout = timer.time() + time
