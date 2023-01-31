@@ -148,7 +148,9 @@ class MBotMovement():
             
             action = Action(**actionDict)
             print("Execute action: %s " % action.action)
-            
-            self.dispatch[action.action](action.value)
+            if action.action in self.dispatch.keys():
+                self.dispatch[action.action](action.value)
+            else:
+                print("---Action doesn't exist---")
         print("--------------------------------")
 
