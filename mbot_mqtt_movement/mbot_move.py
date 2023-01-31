@@ -30,6 +30,7 @@ class MBotMovement():
             'rotate_left': self.rotateLeft,
             'set_speed': self.setSpeedLevel,
             'stop': self.stop,
+            'wait': self.wait,
             'color_init': self.color_init,
             'color_change': self.color_change
         }    
@@ -126,6 +127,12 @@ class MBotMovement():
             
     def setSpeedLevel(self, speed):
         self.write_read(str(speed))
+
+    def wait(self, time):
+        timeout = timer.time() + time
+        while timer.time() < timeout:
+            #do nothing for x time
+            continue
 
     def stop(self, value):
         # empty function
