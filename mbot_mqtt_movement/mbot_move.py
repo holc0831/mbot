@@ -41,12 +41,24 @@ class MBotMovement():
         data = self.arduino.readline()
         return data
 
+    def write_str(self, x: str):
+        self.arduino.write(bytes(x, 'utf-8'))
+        timer.sleep(0.01)
+    
+    def write_float_to_byte(self, x:int):
+        self.arduino.write(bytes([x]))
+        timer.sleep(0.01)
 
+    def clamp(self, num, min_value, max_value):
+        return max(min(num, max_value), min_value)
+    
     def color_init(self, time):
-        self.write_read("c")
+        self.write_str("c")
 
     def color_change(self, value):
-        self.write_read(value)
+        new_value = int(value)
+        new_value = self.clamp(new_value, 0, 255)
+        self.write_float_to_byte(new_value)
 
     def forward(self, time):
         timeout = timer.time() + time

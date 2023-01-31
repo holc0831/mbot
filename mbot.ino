@@ -76,6 +76,7 @@ void loop() {
         // reset count
         colorCheckCount = 0;
         colorCheckLoop = false;
+        Serial.println("-----color changed-----");
         return;
       }
       colorCheckCount++;
@@ -83,6 +84,7 @@ void loop() {
     }
     if(incomingByte == colorCheckByte) {
       colorCheckLoop = true;
+      Serial.println("---waiting color input----");
       return;
     }
     
