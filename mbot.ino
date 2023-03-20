@@ -12,7 +12,7 @@ MeMegaPiDCMotor motor4(PORT2B);
 // m4 m1
 // m3 m2
 
-float motor1Scale = 1;
+float motor1Scale = 0.8;
 float motor2Scale = 0.8;
 float motor3Scale = 0.8;
 float motor4Scale = 0.8;
@@ -25,9 +25,9 @@ uint8_t motorSpeedLevel3 = 255;
 MeNewRGBLed rgbled_67(67,4);
 MeNewRGBLed rgbled_68(68,4);
 
-float light_1 =236;
-float light_2 = 0;
-float light_3 =117;
+float light1 =236;
+float light2 = 0;
+float light3 =117;
 
 byte forward = 119;
 byte left = 97;
@@ -39,23 +39,54 @@ byte n1 = 49;
 byte n2 = 50;
 byte n3 = 51;
 
+byte colorCheckByte = 99;
 
 void setup() {
   Serial.begin(115200);
-  rgbled_67.setColor(0, light_1, light_2, light_3);
-  rgbled_67.show();
 
-  rgbled_68.setColor(0, light_1, light_2, light_3);
-  rgbled_68.show();
+  changeLEDColor(light1, light2, light3);
 }
 
+void changeLEDColor(float red, float green, float blue) {
+  rgbled_67.setColor(0, red, green, blue);
+  rgbled_67.show();
 
+  rgbled_68.setColor(0, red, green, blue);
+  rgbled_68.show();
+  Serial.println("change light");
+}
+
+bool colorCheckLoop;
+int colorCheckCount;
 void loop() {
   // send data only when you receive data:
   if (Serial.available() > 0) {
     // read the incoming byte:
     incomingByte = Serial.read();
     Serial.println(incomingByte, DEC);
+
+    if(colorCheckLoop) {
+      if(colorCheckCount == 0) {
+        light1 = (float)incomingByte;
+      } else if(colorCheckCount == 1) {
+        light2 = (float)incomingByte;
+      } else if(colorCheckCount == 2) {
+        light3 = (float)incomingByte;
+        changeLEDColor(light1, light2, light3);
+        // reset count
+        colorCheckCount = 0;
+        colorCheckLoop = false;
+        Serial.println("-----color changed-----");
+        return;
+      }
+      colorCheckCount++;
+      return;
+    }
+    if(incomingByte == colorCheckByte) {
+      colorCheckLoop = true;
+      Serial.println("---waiting color input----");
+      return;
+    }
     
     if (incomingByte == forward){
       motorRun(1, 1, -1, -1);

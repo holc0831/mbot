@@ -29,7 +29,10 @@ class MBotMovement():
             'rotate_right': self.rotateRight,
             'rotate_left': self.rotateLeft,
             'set_speed': self.setSpeedLevel,
-            'stop': self.stop
+            'stop': self.stop,
+            'wait': self.wait,
+            'color_init': self.color_init,
+            'color_change': self.color_change
         }    
 
     def write_read(self, x):
@@ -38,6 +41,25 @@ class MBotMovement():
         self.arduino.write(bytes('0', 'utf-8'))
         data = self.arduino.readline()
         return data
+
+    def write_str(self, x: str):
+        self.arduino.write(bytes(x, 'utf-8'))
+        timer.sleep(0.01)
+    
+    def write_float_to_byte(self, x:int):
+        self.arduino.write(bytes([x]))
+        timer.sleep(0.01)
+
+    def clamp(self, num, min_value, max_value):
+        return max(min(num, max_value), min_value)
+    
+    def color_init(self, time):
+        self.write_str("c")
+
+    def color_change(self, value):
+        new_value = int(value)
+        new_value = self.clamp(new_value, 0, 255)
+        self.write_float_to_byte(new_value)
 
     def forward(self, time):
         timeout = timer.time() + time
@@ -106,6 +128,12 @@ class MBotMovement():
     def setSpeedLevel(self, speed):
         self.write_read(str(speed))
 
+    def wait(self, time):
+        timeout = timer.time() + time
+        while timer.time() < timeout:
+            #do nothing for x time
+            continue
+
     def stop(self, value):
         # empty function
         return
@@ -120,7 +148,9 @@ class MBotMovement():
             
             action = Action(**actionDict)
             print("Execute action: %s " % action.action)
-            
-            self.dispatch[action.action](action.value)
+            if action.action in self.dispatch.keys():
+                self.dispatch[action.action](action.value)
+            else:
+                print("---Action doesn't exist---")
         print("--------------------------------")
 
