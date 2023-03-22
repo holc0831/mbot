@@ -1,10 +1,12 @@
 import argparse
 from datetime import datetime
-from rover_mqtt_client import RoverMqttClientSubscriber
+from rover_mqtt_client import RoverMqttClient
 from mbot_move import MBotMovement
 import json
 import threading
 import multiprocessing
+import paho.mqtt.client as paho
+from repeat_timer import RepeatedTimer
 
 mbot_movement = MBotMovement()
 
@@ -25,11 +27,16 @@ def begin():
     host = str(config["mqtt_server_ip"])
     topic = config["mqtt_topic"]
     
-    mqtt_client_subscriber = RoverMqttClientSubscriber(username, passwd, host, on_message, topic)
-
-    print("start listening to message")
-    mqtt_client_subscriber.start()
+    mbot_mqtt_client = RoverMqttClient(username, passwd, host, on_message, topic)
     
+    print("start listening to message")
+    repeat_timer = RepeatedTimer(10, heart_beat, mbot_mqtt_client.client, topic)
+    mbot_mqtt_client.start()
+
+    
+def heart_beat(mqtt_client: paho.Client(), topic):
+    heart_beat_topic = topic + "/heartbeat"
+    mqtt_client.publish(heart_beat_topic, "on")
 
 processes = []
 

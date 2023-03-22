@@ -1,6 +1,6 @@
 import paho.mqtt.client as paho
 
-class RoverMqttClientSubscriber():
+class RoverMqttClient():
     def __init__(self, username, passwd, host, on_message_callback, topic):
         self.username = username
         self.passwd = passwd
@@ -11,6 +11,7 @@ class RoverMqttClientSubscriber():
         self.client.connect(host)
         self.client.on_message = on_message_callback
         self.client.subscribe(topic, 2)
+        
 
     
     def start(self):
